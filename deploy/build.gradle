@@ -1,0 +1,19 @@
+apply plugin: "java"
+
+configurations {
+    extlibs
+}
+
+dependencies {
+    extlibs "org.apache.storm:flux-core:2.4.0"
+}
+
+def extlibsDir = "${buildDir}/extlibs"
+task prepareExtlibs(type: Copy) {
+    from project.configurations.extlibs
+    into extlibsDir
+}
+
+build {
+    dependsOn "${project.path}:prepareExtlibs"
+}
