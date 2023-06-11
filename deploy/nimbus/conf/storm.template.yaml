@@ -3,9 +3,7 @@ storm.local.dir: "${NIMBUS_DATA_DIR}"
 storm.log.dir: "${NIMBUS_LOGS_DIR}"
 storm.log4j2.conf.dir: "${NIMBUS_LOGS_CONF_DIR}"
 
-storm.zookeeper.servers:
-  - "${ZK_SERVER_0}"
-  - "${ZK_SERVER_1}"
+storm.zookeeper.servers: ${ZK_SERVERS}
 storm.zookeeper.port: ${ZK_PORT}
 storm.zookeeper.root: "${ZK_CHROOT}"
 

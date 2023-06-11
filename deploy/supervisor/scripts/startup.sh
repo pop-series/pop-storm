@@ -26,10 +26,9 @@ setup() {
   set_env_var_if_missing "STORM_DIST_DIR" "/opt/apache-storm"
   set_env_var_if_missing "STORM_BIN_DIR" "$STORM_DIST_DIR/bin"
 
-  set_env_var_if_missing "NIMBUS_FQDN" "pop-stormnimbus"
+  set_env_var_if_missing "NIMBUS_SEEDS" '["pop-stormnimbus"]'
   set_env_var_if_missing "NIMBUS_THRIFT_PORT" "6627"
-  set_env_var_if_missing "ZK_SERVER_0" "pop-stormzk"
-  set_env_var_if_missing "ZK_SERVER_1" "pop-stormzk"
+  set_env_var_if_missing "ZK_SERVERS" '["pop-stormzk"]'
   set_env_var_if_missing "ZK_PORT" "2181"
   set_env_var_if_missing "ZK_CHROOT" "/pop-storm"
   set_env_var_if_missing "SUPERVISOR_SLOT_PORTS" "[6700,6701]"
@@ -40,7 +39,7 @@ setup() {
   set_env_var_if_missing "WORKER_HEAP_MEMORY_MB" "512"
   set_env_var_if_missing "WORKER_CHILDOPTS" "-Xmx%HEAP-MEM%m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=artifacts/heapdump -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=1%ID% -Dcom.sun.management.jmxremote.rmi.port=1%ID%  -Dcom.sun.management.jmxremote.local.only=false -Djava.rmi.server.hostname=127.0.0.1 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5%ID%"
   set_env_var_if_missing "WORKER_ADDN_CHILDOPTS" ""
-  set_env_var_if_missing "WORKER_GC_CHILDOPTS" "-XX:+PrintGCDetails -Xloggc:artifacts/gc.log -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=1M"
+  set_env_var_if_missing "WORKER_GC_CHILDOPTS" "-Xlog:gc*=info,gc+age*=trace,gc+ergo+cset=trace:file=artifacts/gc.log:time,uptime,level,tags:filecount=10,filesize=1M"
   set_env_var_if_missing "WORKER_GC_ADDN_CHILDOPTS" ""
 
   set_env_var_if_missing "PROCESS_VAR_DIR" "/var/pop-storm/$PROCESS_TYPE"
@@ -54,10 +53,9 @@ setup() {
   set_env_var_if_missing "STORM_TEMPLATE_YAML_PATH" "$CONF_DIR/storm.template.yaml"
   set_env_var_if_missing "STORM_YAML_PATH" "$PROCESS_VAR_DIR/storm.yaml"
 
-  NIMBUS_FQDN="$NIMBUS_FQDN" \
+  NIMBUS_SEEDS="$NIMBUS_SEEDS" \
   NIMBUS_THRIFT_PORT="$NIMBUS_THRIFT_PORT" \
-  ZK_SERVER_0="$ZK_SERVER_0" \
-  ZK_SERVER_1="$ZK_SERVER_1" \
+  ZK_SERVERS="$ZK_SERVERS" \
   ZK_PORT="$ZK_PORT" \
   ZK_CHROOT="$ZK_CHROOT" \
   SUPERVISOR_DATA_DIR="$DATA_DIR" \

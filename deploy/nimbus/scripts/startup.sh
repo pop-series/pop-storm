@@ -28,11 +28,10 @@ setup() {
 
   set_env_var_if_missing "NIMBUS_FQDN" "pop-stormnimbus"
   set_env_var_if_missing "NIMBUS_THRIFT_PORT" "6627"
-  set_env_var_if_missing "NIMBUS_THRIFT_MAX_BUFFER_SIZE" "65536"
+  set_env_var_if_missing "NIMBUS_THRIFT_MAX_BUFFER_SIZE" "33554432"
   set_env_var_if_missing "NIMBUS_CHILDOPTS" "-Xmx256M"
   set_env_var_if_missing "NIMBUS_ADDN_CHILDOPTS" ""
-  set_env_var_if_missing "ZK_SERVER_0" "pop-stormzk"
-  set_env_var_if_missing "ZK_SERVER_1" "pop-stormzk"
+  set_env_var_if_missing "ZK_SERVERS" '["pop-stormzk"]'
   set_env_var_if_missing "ZK_PORT" "2181"
   set_env_var_if_missing "ZK_CHROOT" "/pop-storm"
 
@@ -51,8 +50,7 @@ setup() {
   NIMBUS_DATA_DIR="$DATA_DIR" \
   NIMBUS_LOGS_DIR="$LOGS_DIR" \
   NIMBUS_LOGS_CONF_DIR="$LOGS_CONF_DIR" \
-  ZK_SERVER_0="$ZK_SERVER_0" \
-  ZK_SERVER_1="$ZK_SERVER_1" \
+  ZK_SERVERS="$ZK_SERVERS" \
   ZK_PORT="$ZK_PORT" \
   ZK_CHROOT="$ZK_CHROOT" \
   NIMBUS_THRIFT_PORT="$NIMBUS_THRIFT_PORT" \

@@ -26,7 +26,7 @@ setup() {
   set_env_var_if_missing "STORM_DIST_DIR" "/opt/apache-storm"
   set_env_var_if_missing "STORM_BIN_DIR" "$STORM_DIST_DIR/bin"
 
-  set_env_var_if_missing "NIMBUS_FQDN" "pop-stormnimbus"
+  set_env_var_if_missing "NIMBUS_SEEDS" '["pop-stormnimbus"]'
   set_env_var_if_missing "NIMBUS_THRIFT_PORT" "6627"
   set_env_var_if_missing "UI_HOST" "0.0.0.0"
   set_env_var_if_missing "UI_PORT" "8080"
@@ -44,7 +44,7 @@ setup() {
   set_env_var_if_missing "STORM_TEMPLATE_YAML_PATH" "$CONF_DIR/storm.template.yaml"
   set_env_var_if_missing "STORM_YAML_PATH" "$PROCESS_VAR_DIR/storm.yaml"
 
-  NIMBUS_FQDN="$NIMBUS_FQDN" \
+  NIMBUS_SEEDS="$NIMBUS_SEEDS" \
   NIMBUS_THRIFT_PORT="$NIMBUS_THRIFT_PORT" \
   UI_DATA_DIR="$DATA_DIR" \
   UI_LOGS_DIR="$LOGS_DIR" \

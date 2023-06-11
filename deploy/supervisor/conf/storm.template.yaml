@@ -2,13 +2,11 @@ storm.local.dir: "${SUPERVISOR_DATA_DIR}"
 storm.log.dir: "${SUPERVISOR_LOGS_DIR}"
 storm.log4j2.conf.dir: "${SUPERVISOR_LOGS_CONF_DIR}"
 
-storm.zookeeper.servers:
-  - "${ZK_SERVER_0}"
-  - "${ZK_SERVER_1}"
+storm.zookeeper.servers: ${ZK_SERVERS}
 storm.zookeeper.port: ${ZK_PORT}
 storm.zookeeper.root: "${ZK_CHROOT}"
 
-nimbus.seeds: ["${NIMBUS_FQDN}"]
+nimbus.seeds: ${NIMBUS_SEEDS}
 nimbus.thrift.port: ${NIMBUS_THRIFT_PORT}
 
 supervisor.slots.ports: ${SUPERVISOR_SLOT_PORTS}

@@ -14,6 +14,7 @@ services:
       - "2181:2181"
     volumes:
       - ./:/opt/pop-storm:ro
+      - pop-stormzk-vol:/var/pop-storm
   pop-stormnimbus:
     container_name: pop-stormnimbus
     hostname: pop-stormnimbus
@@ -29,7 +30,7 @@ services:
       - "6627:6627"
     volumes:
       - ./:/opt/pop-storm:ro
-      - pop-stormnimbus-vol:/tmp
+      - pop-stormnimbus-vol:/var/pop-storm
   pop-stormui:
     container_name: pop-stormui
     hostname: pop-stormui
@@ -45,7 +46,7 @@ services:
       - "8080:8080"
     volumes:
       - ./:/opt/pop-storm:ro
-      - pop-stormui-vol:/tmp
+      - pop-stormui-vol:/var/pop-storm
   pop-stormsupervisor:
     container_name: pop-stormsupervisor
     hostname: pop-stormsupervisor
@@ -65,8 +66,10 @@ services:
       - "56701:56701"
     volumes:
       - ./:/opt/pop-storm:ro
-      - pop-stormsupervisor-vol:/tmp
+      - pop-stormsupervisor-vol:/var/pop-storm
 volumes:
+  pop-stormzk-vol:
+    name: pop-stormzk-vol
   pop-stormnimbus-vol:
     name: pop-stormnimbus-vol
   pop-stormui-vol:

@@ -1,0 +1,2 @@
+nimbus.seeds: ["pop-stormnimbus"]
+nimbus.thrift.port: 6627
