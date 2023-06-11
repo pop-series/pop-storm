@@ -17,7 +17,7 @@ export SCRIPT_DIR="$(pwd -P)"
 cd "$SAVED" >/dev/null
 
 
-. "$SCRIPT_DIR/../../common-scripts/utils.sh"
+. "$SCRIPT_DIR/../../common/scripts/utils.sh"
 
 
 setup() {
