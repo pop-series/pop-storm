@@ -1,0 +1,83 @@
+version: "3.5"
+services:
+  pop-stormzk:
+    container_name: pop-stormzk
+    hostname: pop-stormzk
+    networks:
+      pop-series:
+        ipv4_address: 175.0.0.10
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    ports:
+      - "2181:2181"
+    volumes:
+      - ./:/opt/pop-storm:ro
+  pop-stormnimbus:
+    container_name: pop-stormnimbus
+    hostname: pop-stormnimbus
+    networks:
+      pop-series:
+        ipv4_address: 175.0.0.11
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    ports:
+      - "6627:6627"
+    volumes:
+      - ./:/opt/pop-storm:ro
+      - pop-stormnimbus-vol:/tmp
+  pop-stormui:
+    container_name: pop-stormui
+    hostname: pop-stormui
+    networks:
+      pop-series:
+        ipv4_address: 175.0.0.12
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/opt/pop-storm:ro
+      - pop-stormui-vol:/tmp
+  pop-stormsupervisor:
+    container_name: pop-stormsupervisor
+    hostname: pop-stormsupervisor
+    networks:
+      pop-series:
+        ipv4_address: 175.0.0.13
+    deploy:
+      resources:
+        limits:
+          memory: 4096M
+    ports:
+      - "6700:6700"
+      - "6701:6701"
+      - "16700:16700"
+      - "16701:16701"
+      - "56700:56700"
+      - "56701:56701"
+    volumes:
+      - ./:/opt/pop-storm:ro
+      - pop-stormsupervisor-vol:/tmp
+volumes:
+  pop-stormnimbus-vol:
+    name: pop-stormnimbus-vol
+  pop-stormui-vol:
+    name: pop-stormui-vol
+  pop-stormsupervisor-vol:
+    name: pop-stormsupervisor-vol
+networks:
+  pop-series:
+    name: pop-series
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 175.0.0.0/24
+          gateway: 175.0.0.1

@@ -1,14 +1,29 @@
-apply plugin: "java"
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:6.18.0"
+    }
+}
+
+version = "0.0.1"
+apply from: "${rootDir}/gradle/scripts/jdk.gradle"
 
 configurations {
     extlibs
 }
 
+def stormVersion = "2.4.0"
+def log4jVersion = "2.17.1"
+def extlibsDir = "${buildDir}/extlibs"
+
 dependencies {
-    extlibs "org.apache.storm:flux-core:2.4.0"
+    extlibs ("org.apache.storm:flux-core:${stormVersion}") { transitive = false }
+    extlibs ("org.apache.logging.log4j:log4j-core:${log4jVersion}") { transitive = false }
 }
 
-def extlibsDir = "${buildDir}/extlibs"
 task prepareExtlibs(type: Copy) {
     from project.configurations.extlibs
     into extlibsDir
@@ -17,3 +32,11 @@ task prepareExtlibs(type: Copy) {
 build {
     dependsOn "${project.path}:prepareExtlibs"
 }
+
+
+// disable unwanted tasks
+assemble.enabled = false
+classes.enabled = false
+jar.enabled = false
+processResources.enabled = false
+test.enabled = false

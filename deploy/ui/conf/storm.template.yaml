@@ -1,0 +1,10 @@
+storm.local.dir: "${UI_DATA_DIR}"
+storm.log.dir: "${UI_LOGS_DIR}"
+storm.log4j2.conf.dir: "${UI_LOGS_CONF_DIR}"
+
+nimbus.seeds: ["${NIMBUS_FQDN}"]
+nimbus.thrift.port: ${NIMBUS_THRIFT_PORT}
+
+ui.host: ${UI_HOST}
+ui.port: ${UI_PORT}
+ui.childopts: "${UI_CHILDOPTS}"

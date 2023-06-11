@@ -1,0 +1,4 @@
+storm.log.dir: "${ZK_LOGS_DIR}"
+storm.log4j2.conf.dir: "${ZK_LOGS_CONF_DIR}"
+storm.zookeeper.port: ${ZK_PORT}
+dev.zookeeper.path: "${ZK_DATA_DIR}"

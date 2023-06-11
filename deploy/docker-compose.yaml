@@ -1,0 +1,52 @@
+version: "3.5"
+services:
+  pop-storminit:
+    image: pop-storm:latest
+    build:
+      context: ./
+    command: echo "image prepared"
+  pop-stormzk:
+    image: pop-storm:latest
+    user: leafnode
+    command: /opt/pop-storm/zookeeper/scripts/startup.sh
+    restart: always
+    healthcheck:
+      test: lsof -n -i :2181
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    depends_on:
+      - pop-storminit
+  pop-stormnimbus:
+    image: pop-storm:latest
+    user: leafnode
+    command: /opt/pop-storm/nimbus/scripts/startup.sh
+    restart: always
+    healthcheck:
+      test: lsof -n -i :6627
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    depends_on:
+      - pop-stormzk
+  pop-stormui:
+    image: pop-storm:latest
+    user: leafnode
+    command: /opt/pop-storm/ui/scripts/startup.sh
+    restart: always
+    healthcheck:
+      test: lsof -n -i :8080
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    depends_on:
+      - pop-stormnimbus
+  pop-stormsupervisor:
+    image: pop-storm:latest
+    user: leafnode
+    command: /opt/pop-storm/supervisor/scripts/startup.sh
+    restart: always
+    healthcheck:
+      test: ["NONE"]
+    depends_on:
+      - pop-stormnimbus
