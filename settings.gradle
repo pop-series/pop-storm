@@ -1,3 +1,4 @@
-rootProject.name = "pop-series-storm"
+rootProject.name = "pop-storm"
 
 include "deploy"
+include "practical-recipes"
