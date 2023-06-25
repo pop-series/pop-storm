@@ -1,0 +1,38 @@
+package io.pop.storm.recipes.spring.hooks;
+
+import io.pop.storm.recipes.spring.Constants;
+import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.storm.hooks.BaseWorkerHook;
+import org.apache.storm.task.WorkerTopologyContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+@Slf4j
+public class SpringAwareWorkerHook extends BaseWorkerHook {
+
+  private final String[] springConfigLocations;
+
+  private transient ConfigurableApplicationContext springContext;
+
+  public SpringAwareWorkerHook(final String[] springConfigLocations) {
+    super();
+    this.springConfigLocations = springConfigLocations;
+  }
+
+  @Override
+  public void start(Map<String, Object> topoConf, WorkerTopologyContext context) {
+    super.start(topoConf, context);
+    springContext = new ClassPathXmlApplicationContext(springConfigLocations);
+    topoConf.put(Constants.SPRING_CONTEXT, springContext);
+    log.info("spring context initialized: [{}]", springContext);
+  }
+
+  @Override
+  public void shutdown() {
+    super.shutdown();
+    if (springContext != null) {
+      springContext.close();
+    }
+  }
+}

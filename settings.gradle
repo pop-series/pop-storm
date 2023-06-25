@@ -2,3 +2,5 @@ rootProject.name = "pop-storm"
 
 include "deploy"
 include "practical-recipes"
+include "practical-recipes:spring"
+include "practical-recipes:spring-runner"
