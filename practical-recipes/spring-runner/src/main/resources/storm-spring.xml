@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="localFileDao" class="io.pop.storm.recipes.spring.beans.LocalFileDao" init-method="init">
+        <constructor-arg name="filePath" value="META-INF/license.txt" />
+    </bean>
+    <bean id="sentenceSplitWordExtractor" class="io.pop.storm.recipes.spring.beans.SplitSentence">
+        <constructor-arg name="boundaryRegex" value="\\s+" />
+    </bean>
+
+</beans>
