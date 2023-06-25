@@ -6,6 +6,7 @@ repositories {
 
 version = "0.0.1"
 apply from: "${rootDir}/gradle/scripts/jdk.gradle"
+apply from: "${rootDir}/gradle/scripts/jdk17.gradle"
 
 def lombokVersion = "1.18.28"
 def stormVersion = "2.4.0"
