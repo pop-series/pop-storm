@@ -24,6 +24,8 @@ public class SpringAwareWorkerHook extends BaseWorkerHook {
   public void start(Map<String, Object> topoConf, WorkerTopologyContext context) {
     super.start(topoConf, context);
     springContext = new ClassPathXmlApplicationContext(springConfigLocations);
+    // NOTE: using topoConf for storing shared state is a hack which may no longer be required from
+    // storm v2.5.0. Refer https://issues.apache.org/jira/browse/STORM-3925 for more details.
     topoConf.put(Constants.SPRING_CONTEXT, springContext);
     log.info("spring context initialized: [{}]", springContext);
   }
