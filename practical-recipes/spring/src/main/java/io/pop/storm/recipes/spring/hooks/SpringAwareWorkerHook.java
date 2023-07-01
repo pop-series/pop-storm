@@ -1,6 +1,5 @@
 package io.pop.storm.recipes.spring.hooks;
 
-import io.pop.storm.recipes.spring.Constants;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.storm.hooks.BaseWorkerHook;
@@ -24,9 +23,10 @@ public class SpringAwareWorkerHook extends BaseWorkerHook {
   public void start(Map<String, Object> topoConf, WorkerTopologyContext context) {
     super.start(topoConf, context);
     springContext = new ClassPathXmlApplicationContext(springConfigLocations);
-    // NOTE: using topoConf for storing shared state is a hack which may no longer be required from
-    // storm v2.5.0. Refer https://issues.apache.org/jira/browse/STORM-3925 for more details.
-    topoConf.put(Constants.SPRING_CONTEXT, springContext);
+    // NOTE: using BeanFactoryProvider for sharing spring context in a singleton is a temporary hack
+    // which may no longer be required from storm v2.5.x onwards.
+    // Refer https://issues.apache.org/jira/browse/STORM-3925 for more details.
+    BeanFactoryProvider.setFactory(springContext);
     log.info("spring context initialized: [{}]", springContext);
   }
 

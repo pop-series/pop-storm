@@ -2,8 +2,10 @@ package io.pop.storm.recipes.spring.spouts;
 
 import io.pop.storm.recipes.spring.Constants;
 import io.pop.storm.recipes.spring.beans.iface.FileDao;
+import io.pop.storm.recipes.spring.hooks.BeanFactoryProvider;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.storm.spout.SpoutOutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -23,12 +25,17 @@ public class FileBasedSentenceSpout extends BaseRichSpout {
   private transient FileDao fileDao;
   private transient int currIndex;
 
+  @Setter // visible for testing
+  private transient BeanFactory beanFactory;
+
   @Override
   public void open(
       Map<String, Object> conf, TopologyContext context, SpoutOutputCollector collector) {
     this.collector = collector;
-    BeanFactory springContext = (BeanFactory) conf.get(Constants.SPRING_CONTEXT);
-    fileDao = springContext.getBean(fileDaoBeanRef, FileDao.class);
+    if (beanFactory == null) {
+      beanFactory = BeanFactoryProvider.getFactory();
+    }
+    fileDao = beanFactory.getBean(fileDaoBeanRef, FileDao.class);
     currIndex = 0;
     log.info("spout initialized");
   }

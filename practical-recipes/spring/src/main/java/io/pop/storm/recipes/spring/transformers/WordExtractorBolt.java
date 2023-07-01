@@ -2,9 +2,11 @@ package io.pop.storm.recipes.spring.transformers;
 
 import io.pop.storm.recipes.spring.Constants;
 import io.pop.storm.recipes.spring.beans.iface.WordExtractor;
+import io.pop.storm.recipes.spring.hooks.BeanFactoryProvider;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -22,6 +24,9 @@ public class WordExtractorBolt extends BaseTickTupleAwareRichBolt {
   private final String wordExtractorBeanRef;
   private transient OutputCollector collector;
   private transient WordExtractor wordExtractor;
+
+  @Setter // visible for testing
+  private transient BeanFactory beanFactory;
 
   @Override
   protected void process(Tuple tuple) {
@@ -44,8 +49,10 @@ public class WordExtractorBolt extends BaseTickTupleAwareRichBolt {
   public void prepare(
       Map<String, Object> topoConf, TopologyContext context, OutputCollector collector) {
     this.collector = collector;
-    BeanFactory springContext = (BeanFactory) topoConf.get(Constants.SPRING_CONTEXT);
-    wordExtractor = springContext.getBean(wordExtractorBeanRef, WordExtractor.class);
+    if (beanFactory == null) {
+      beanFactory = BeanFactoryProvider.getFactory();
+    }
+    wordExtractor = beanFactory.getBean(wordExtractorBeanRef, WordExtractor.class);
   }
 
   @Override
