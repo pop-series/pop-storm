@@ -58,12 +58,14 @@ services:
         limits:
           memory: 4096M
     ports:
-      - "6700:6700"
-      - "6701:6701"
-      - "16700:16700"
-      - "16701:16701"
-      - "56700:56700"
-      - "56701:56701"
+      - "6700:6700"     # worker port
+      - "6701:6701"     # worker port
+      - "16700:16700"   # jmx port (relative to worker port)
+      - "16701:16701"   # jmx port
+      - "46700:46700"   # additional port (relative to worker port, may use it to start a metric server, say prometheus)
+      - "46701:46701"   # additional port
+      - "56700:56700"   # debug port (relative to worker port)
+      - "56701:56701"   # debug port
     volumes:
       - ./:/opt/pop-storm:ro
       - pop-stormsupervisor-vol:/var/pop-storm
