@@ -1,0 +1,19 @@
+repositories {
+    maven {
+        url "https://clojars.org/repo/"
+    }
+}
+
+version = "0.0.1"
+apply from: "${rootDir}/gradle/scripts/jdk.gradle"
+apply from: "${rootDir}/gradle/scripts/jdk17.gradle"
+
+def lombokVersion = "1.18.28"
+def stormVersion = "2.4.0"
+
+dependencies {
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    compileOnly "org.apache.storm:storm-client:${stormVersion}"
+}
