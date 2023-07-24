@@ -1,0 +1,30 @@
+repositories {
+    maven {
+        url "https://clojars.org/repo/"
+    }
+}
+
+version = "0.0.1"
+apply from: "${rootDir}/gradle/scripts/jdk.gradle"
+apply from: "${rootDir}/gradle/scripts/jdk17.gradle"
+
+def lombokVersion = "1.18.28"
+def stormVersion = "2.4.0"
+def micrometerVersion = "1.11.2"
+def prometheusVersion = "0.16.0"
+
+dependencies {
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    compileOnly "org.apache.storm:storm-client:${stormVersion}"
+    implementation "io.micrometer:micrometer-registry-prometheus:${micrometerVersion}"
+    implementation "io.prometheus:simpleclient_dropwizard:${prometheusVersion}"
+}
+
+task fatJar(type: Jar) {
+    archiveBaseName = "${project.name}-all"
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
