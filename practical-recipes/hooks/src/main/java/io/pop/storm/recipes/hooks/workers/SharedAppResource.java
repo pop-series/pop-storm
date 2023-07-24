@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class SharedAppResource {
-    @Getter
-    @Setter(AccessLevel.PACKAGE)
-    private static AppMetricRecorder appMetricRecorder;
+  @Getter
+  @Setter(AccessLevel.PACKAGE)
+  private static AppMetricRecorder appMetricRecorder;
 }

@@ -18,10 +18,6 @@ public class NoopLambdaConsumer implements SerializableConsumer<Tuple> {
     final String value = tuple.getStringByField(EventConstants.VALUE);
     final long srcEpoch = tuple.getLongByField(EventConstants.SRC_TIMESTAMP_MILLIS);
 
-    log.info(
-        "received tuple with key: [{}]; value: [{}]; srcEpoch: [{}]",
-        key,
-        value,
-        srcEpoch);
+    log.info("received tuple with key: [{}]; value: [{}]; srcEpoch: [{}]", key, value, srcEpoch);
   }
 }
