@@ -61,12 +61,15 @@ public class AppWorkerHook extends BaseWorkerHook {
           Optional.ofNullable(topoConf.get(Config.TOPOLOGY_NAME))
               .map(Object::toString)
               .orElse(topologyId);
-      final String worker = Utils.hostname() + ":" + context.getThisWorkerPort();
+      final String workerHost = Utils.hostname();
+      final String workerPort = context.getThisWorkerPort().toString();
       final List<Tag> defaultTags =
           List.of(
               Tag.of(MetricConstants.TOPOLOGY_ID, topologyId),
               Tag.of(MetricConstants.TOPOLOGY_NAME, topologyName),
-              Tag.of(MetricConstants.WORKER, worker));
+              Tag.of(MetricConstants.WORKER_HOST, workerHost),
+              Tag.of(MetricConstants.WORKER_PORT, workerPort));
+      log.info("prepared default tags: [{}]", defaultTags);
 
       closeableMeterBinders = bindMetrics(meterRegistry, defaultTags);
       final AppMetricRecorder appMetricRecorder =
@@ -74,24 +77,26 @@ public class AppWorkerHook extends BaseWorkerHook {
               meterRegistry, defaultTags, new Duration[] {Duration.ofMillis(100)});
       SharedAppResource.setAppMetricRecorder(appMetricRecorder);
 
-      final int serverPortOffset =
-          (int)
+      final Long serverPortOffset =
+          (Long)
               topoConf.getOrDefault(
                   ConfigConstants.METRICS_HTTP_PORT_OFFSET_KEY,
                   ConfigConstants.METRICS_HTTP_PORT_OFFSET_DEFAULT);
-      final int serverBacklog =
-          (int)
+      final Long serverBacklog =
+          (Long)
               topoConf.getOrDefault(
                   ConfigConstants.METRICS_HTTP_BACKLOG_KEY,
                   ConfigConstants.METRICS_HTTP_BACKLOG_DEFAULT);
-      final int serverStopWaitSecs =
-          (int)
+      final Long serverStopWaitSecs =
+          (Long)
               topoConf.getOrDefault(
                   ConfigConstants.METRICS_HTTP_STOP_WAIT_SECS_KEY,
                   ConfigConstants.METRICS_HTTP_STOP_WAIT_SECS_DEFAULT);
       serverConfig =
           new ServerConfig(
-              serverPortOffset + context.getThisWorkerPort(), serverBacklog, serverStopWaitSecs);
+              serverPortOffset.intValue() + context.getThisWorkerPort(),
+              serverBacklog.intValue(),
+              serverStopWaitSecs.intValue());
       httpServer = launchMetricServer(meterRegistry, serverConfig);
 
     } catch (final IOException ex) {
@@ -124,6 +129,7 @@ public class AppWorkerHook extends BaseWorkerHook {
 
   protected List<AutoCloseable> bindMetrics(
       final PrometheusMeterRegistry meterRegistry, final List<Tag> defaultTags) {
+    log.info("binding metrics");
     new JvmMemoryMetrics(defaultTags).bindTo(meterRegistry);
     new JvmThreadMetrics(defaultTags).bindTo(meterRegistry);
     new ClassLoaderMetrics(defaultTags).bindTo(meterRegistry);
@@ -144,7 +150,9 @@ public class AppWorkerHook extends BaseWorkerHook {
     final Set<String> stormMetricRegistryNames = SharedMetricRegistries.names();
     if (stormMetricRegistryNames != null) {
       final Map<String, String> tags =
-          defaultTags.stream().collect(Collectors.toMap(Tag::getKey, Tag::getValue));
+          defaultTags.stream()
+              .filter(tag -> MetricConstants.TOPOLOGY_NAME.equals(tag.getKey()))
+              .collect(Collectors.toMap(Tag::getKey, Tag::getValue));
       for (final String metricRegistryName : stormMetricRegistryNames) {
         MetricRegistry stormMetricRegistry = SharedMetricRegistries.getOrCreate(metricRegistryName);
         new DropwizardExports(
@@ -163,6 +171,7 @@ public class AppWorkerHook extends BaseWorkerHook {
 
   protected HttpServer launchMetricServer(
       final PrometheusMeterRegistry meterRegistry, final ServerConfig config) throws IOException {
+    log.info("launching metric server with config: [{}]", config);
     final HttpServer httpServer =
         HttpServer.create(new InetSocketAddress(config.port()), config.backlog());
     httpServer.createContext("/metrics", new PrometheusMetricsHttpHandler(meterRegistry));

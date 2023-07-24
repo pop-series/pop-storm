@@ -41,9 +41,8 @@ public class AppMetricTaskHook extends BaseTaskHook implements Serializable {
 
   @Override
   public void boltExecute(BoltExecuteInfo info) {
-    log.info("inside boltExecute");
-    final long srcEpoch =
-        Long.valueOf(info.tuple.getStringByField(EventConstants.SRC_TIMESTAMP_MILLIS));
+    log.info("inside bolt execute");
+    final long srcEpoch = info.tuple.getLongByField(EventConstants.SRC_TIMESTAMP_MILLIS);
     final long currEpoch = System.currentTimeMillis();
     final String component = topologyContext.getComponentId(info.executingTaskId);
     appMetricRecorder.recordEventCumulativeTimeElapsed(

@@ -18,15 +18,15 @@ class MetricNameAndGroupingKey {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MetricNameAndGroupingKey.class);
 
-  // storm.worker.(topologyId).(hostName).(componentId).(streamId).(taskId).(workerPort)-(name)
-  // storm.worker.(topologyId).(hostName).(componentId).(taskId).(workerPort)-(name)
-  // storm.topology.(topologyId).(hostName).(componentId).(taskId).(workerPort)-(name)
+  // storm.worker.(topologyId).(workerHost).(componentId).(streamId).(taskId).(workerPort)-(name)
+  // storm.worker.(topologyId).(workerHost).(componentId).(taskId).(workerPort)-(name)
+  // storm.topology.(topologyId).(workerHost).(componentId).(taskId).(workerPort)-(name)
   private static final Pattern STORM_WORKER_METRIC_NAME_PATTERN =
       Pattern.compile(
           "storm\\."
               + "(?<type>worker|topology)\\."
               + "(?<topologyId>[\\p{Alnum}[-_]]+)\\."
-              + "(?<hostName>[\\p{Alnum}[-_]]+)\\."
+              + "(?<workerHost>[\\p{Alnum}[-_]]+)\\."
               + "(?<componentId>[\\p{Alnum}[-_]]+)\\."
               + "(?:(?<streamId>[\\p{Alnum}[-_]]+)\\.)?"
               + "(?<taskId>-?[\\d]+)\\."
@@ -51,7 +51,7 @@ class MetricNameAndGroupingKey {
     Map<String, String> groupingKey = new LinkedHashMap<>();
 
     addToGroupingKey("topologyId", matcher, groupingKey);
-    addToGroupingKey("hostName", matcher, groupingKey);
+    addToGroupingKey("workerHost", matcher, groupingKey);
     addToGroupingKey("componentId", matcher, groupingKey);
     addToGroupingKey("streamId", matcher, groupingKey);
     addToGroupingKey("taskId", matcher, groupingKey);

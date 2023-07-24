@@ -36,7 +36,7 @@ public class TopologyRunner {
     TopologyBuilder builder = new TopologyBuilder();
 
     builder.addWorkerHook(new AppWorkerHook());
-    builder.setSpout(RANDOM_SPOUT_ID, new RandomSpout(100));
+    builder.setSpout(RANDOM_SPOUT_ID, new RandomSpout(5000));
     builder.setBolt(REVERSE_BOLT_ID, new ReverseBolt()).shuffleGrouping(RANDOM_SPOUT_ID);
     builder
         .setBolt(NOOP_LAMBDA_BOLT, new LambdaConsumerBolt(new NoopLambdaConsumer()))
